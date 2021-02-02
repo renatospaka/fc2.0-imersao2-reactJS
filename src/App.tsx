@@ -1,34 +1,42 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
+import { Header } from "./components/Header";
+import { TextField } from "./components/TextField";
+
+interface Task{
+  name: string
+  description: string
+}
 
 function App() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [tasks, setTasks] = useState<Task[]>([]);
+  
+  function onSubmit(event: FormEvent) {
+    event.preventDefault();
+    setTasks([...tasks, {name, description}]);
+  }
+
   return (
     <div>
-      <h1>Todo List</h1>
-      <form>
-        <div>
-          <label htmlFor="name">Nome:</label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Descrição:</label>
-          <input
-            id="description"
-            type="text"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
-        </div>
+      <Header/>
+      <form onSubmit={onSubmit}>
+        <TextField
+          id="name"
+          label="Nome:"
+          onChange={(value) => setName(value)}
+        />
+        <TextField
+          id="description"
+          label="Descrição:"
+          onChange={(value) => setDescription(value)}
+        />
         <button type="submit">Adicionar</button>
       </form>
       <ul>
-        <li></li>
+        {tasks.map((task) => (
+          <li>{task.name} - {task.description}</li>
+        ))}
       </ul>
     </div>
   );
